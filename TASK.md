@@ -34,32 +34,32 @@ Die Daten werden in der Zentrale in einem MongoDB Repository gespeichert und kö
 ## 1.4 Demo Applikation
 
 * Download Docker for MongoDB  
-  `docker pull mongo`  
+  `docker pull mongo`
 
 * Run Docker for MongoDB (using port 27017, name mongo)  
-  `docker run -d -p 27017:27017 --name mongo mongo`  
+  `docker run -d -p 27017:27017 --name mongo mongo`
 
 * Run MongoShell on Docker Instance  
   `docker exec -it mongo bash`  
-  `mongo`  
+  `mongo`
 
 * Execute MongoShell Commands  
-	`show dbs`  
-	`use local`  
-	`db.startup_log.count();`  
+  `show dbs`  
+  `use local`  
+  `db.startup_log.count();`
 
-* Accessing Data with MongoDB and Spring  
-  - Build and Run Exmample  
-	  `gradle clean bootRun`  
+* Accessing Data with MongoDB and Spring
+    - Build and Run Exmample  
+      `gradle clean bootRun`
 
-  - Check Data in MongoDB  
-		`docker exec -it mongo bash`  
-		`mongo`  
-		`use test`  
-		`db.warehouseData.find()`  
-	  	``
+    - Check Data in MongoDB  
+      `docker exec -it mongo bash`  
+      `mongo`  
+      `use test`  
+      `db.warehouseData.find()`  
+      ``
 
-## 1.5 Bewertung  
+## 1.5 Bewertung
 
 *   Gruppengrösse: 1 Person
 *   Abgabemodus: per Protokoll und bei Bedarf per Abgabespraech
@@ -69,7 +69,7 @@ Die Daten werden in der Zentrale in einem MongoDB Repository gespeichert und kö
     * Speicherung der Daten in einem MongoDB Repository in der Zentrale
         - mindestens 30 Produkte in 5 Produktkategorien
     * Speicherung der Daten von nur einem Lagerstandort
-    * Beantwortung der Fragestellungen   
+    * Beantwortung der Fragestellungen
 *   Anforderungen **"zur Gänze erfüllt"**
     * Formulierung 3 sinnvollen Fragestellung für einen Anwendungsfall in der Zentrale und deren Abfragen in einer Mongo Shell
     * Speicherung der Daten von mehreren Lagerstandorten
@@ -77,98 +77,16 @@ Die Daten werden in der Zentrale in einem MongoDB Repository gespeichert und kö
 
 ## 1.6 Fragestellung für Protokoll
 
-### 1.6.1 GKü
-
 + Nennen Sie 4 Vorteile eines NoSQL Repository im Gegensatz zu einem relationalen DBMS
-
-- Skalierbarkeit: Horizontal skalierbar, ideal für Big Data.
-- Flexibles Schema: Ermöglicht unstrukturierte Daten, schnelle Iterationen.
-- Leistung: Optimiert für schnelle Lese- und Schreibvorgänge.
-- Verfügbarkeit: Entworfen für hohe Verfügbarkeit über verteilte Systeme.
-
 + Nennen Sie 4 Nachteile eines NoSQL Repository im Gegensatz zu einem relationalen DBMS
-
-- Standardisierung: Fehlt, was Lernkurve erhöht.
-- Transaktionen: Eingeschränkte ACID-Transaktionsunterstützung.
-- Konsistenz: Eventual Consistency kann zu Inkonsistenzen führen.
-- Analysefähigkeit: Weniger robuste Abfrage- und Berichtsfunktionen.
-
 + Welche Schwierigkeiten ergeben sich bei der Zusammenführung der Daten?
-
-Unterschiede in Datenmodellen, Konsistenz und Skalierungsstrategien erschweren die Integration.
-
 + Welche Arten von NoSQL Datenbanken gibt es?
 + Nennen Sie einen Vertreter für jede Art?
-
-- Dokument: MongoDB
-- Schlüssel-Wert: Redis
-- Spaltenorientiert: Cassandra
-- Graph: Neo4j
-
 + Beschreiben Sie die Abkürzungen CA, CP und AP in Bezug auf das CAP Theorem
-
-- CA: Konsistenz und Verfügbarkeit, schwierig bei Netzwerkpartition.
-- CP: Konsistenz und Partitionstoleranz, kann Verfügbarkeit beeinträchtigen.
-- AP: Verfügbarkeit und Partitionstoleranz, kann Konsistenz beeinträchtigen.
-
 + Mit welchem Befehl koennen Sie den Lagerstand eines Produktes aller Lagerstandorte anzeigen.
-
-Aller Lagerstandorte: 
-```sql
-SELECT SUM(lagerstand) FROM lager WHERE produktID = 'X';
-```
-
 + Mit welchem Befehl koennen Sie den Lagerstand eines Produktes eines bestimmten Lagerstandortes anzeigen.
 
-Eines bestimmten Lagerstandortes:
-```sql
-SELECT lagerstand FROM lager WHERE produktID = 'X' AND lagerortID = 'Y';
-```
-
-### 1.6.2 GKv
-
-+ Formulierung 3 sinnvollen Fragestellung für einen Anwendungsfall in der Zentrale und deren Abfragen in einer Mongo Shell
-
-1. Produkte mit geringem Bestand
-
-Anwendungsfall: Identifizierung fast ausverkaufter Produkte.
-
-MongoDB-Abfrage:
-```sql
-db.warehouseData.find({"competitionData.productQuantity": {$lt: 100}})
-```
-
-2. Lagerbestand eines spezifischen Produkts
-
-Anwendungsfall: Finden aller Lager mit Vorräten von "Ariel Waschmittel Color".
-
-MongoDB-Abfrage:
-```sql
-db.warehouseData.find({"competitionData.productName": "Ariel Waschmittel Color"})
-```
-
-3. Gesamtbestand eines Produkts
-
-Anwendungsfall: Ermittlung der Gesamtzahl eines Produkts über alle Lager.
-
-MongoDB-Abfrage:
-```sql
-db.warehouseData.aggregate([
-{$unwind: "$competitionData"},
-{$match: {"competitionData.productName": "Bio Orangensaft Sonne"}},
-{$group: {_id: null, total: {$sum: "$competitionData.productQuantity"}}}
-])
-```
-
-## 1.7 Ablauf
-
-1. Erstellen eines neuen Models (WarehouseData)
-2. Anpassung des Java Codes (Application)
-3. Zum Testen erstellung & speichern von WarehouseData Objekten
-4. Finden von WarehouseData Objekten
-5. Erstellung von Kronjobs für die automatische Speicherung von WarehouseData Objekten
-
-## 1.8 Links und Dokumente
+## 1.7 Links und Dokumente
 * [Accessing Data with MongoDB](https://spring.io/guides/gs/accessing-data-mongodb/)
 * [MongoDB Installation](https://docs.mongodb.com/manual/administration/install-community/)
 * [mongo Shell Quick Reference](https://docs.mongodb.com/manual/reference/mongo-shell/)
@@ -178,56 +96,56 @@ db.warehouseData.aggregate([
 * [Spring Data MongoDB](https://spring.io/projects/spring-data-mongodb)
 * [Spring RESTful Web Service](https://spring.io/guides/gs/rest-service/#use-maven)
 * NoSQL Introduction
-  - [NoSQL on w3resource](https://www.w3resource.com/mongodb/nosql.php)  
-  - [Introduction to NoSQL Database](https://www.edureka.co/blog/introduction-to-nosql-database/)  
-  - [NoSQL im Überblick](https://www.heise.de/ct/artikel/NoSQL-im-Ueberblick-1012483.html)  
-  - [Introduction to NoSQL Databases on YouTube ](https://www.youtube.com/watch?v=2yQ9TGFpDuM)  
+    - [NoSQL on w3resource](https://www.w3resource.com/mongodb/nosql.php)
+    - [Introduction to NoSQL Database](https://www.edureka.co/blog/introduction-to-nosql-database/)
+    - [NoSQL im Überblick](https://www.heise.de/ct/artikel/NoSQL-im-Ueberblick-1012483.html)
+    - [Introduction to NoSQL Databases on YouTube ](https://www.youtube.com/watch?v=2yQ9TGFpDuM)
 
 
-## 1.9 Mongo Shell Abfragen  
-  
+## 1.8 Mongo Shell Abfragen
+
 Link to [Mongo Shell Query and Projection Operators](https://docs.mongodb.com/manual/reference/operator/query/)
 
 Den Demo-Abfragen liegt folgende Datenstruktur zu Grunde:   
-   `{  `  
-   `    warehouseID: '1',   `   
-   `    warehouseName: 'Linz Bahnhof',   `   
-   `   timestamp: '2022-01-02 01:00:00',   `   
-   `    warehousePostalCode: 4010,`    
-   `   warehouseCity: 'Linz',`   
-   `   warehouseCountrz: 'Austria',`   
-   `   productData: [`  
-   `      { productID: '00-443175', productName: 'Bio Orangensaft Sonne', productQuantity: 2500 },`    
-   `      { productID: '00-871895', productName: 'Bio Apfelsaft Gold', productQuantity: 3420 },`    
-   `      { productID: '01-926885', productName: 'Ariel Waschmittel Color', productQuantity: 478 },`     
-   `   ]`   
-    `}`
-  
+`{  `  
+`    warehouseID: '1',   `   
+`    warehouseName: 'Linz Bahnhof',   `   
+`   timestamp: '2022-01-02 01:00:00',   `   
+`    warehousePostalCode: 4010,`    
+`   warehouseCity: 'Linz',`   
+`   warehouseCountrz: 'Austria',`   
+`   productData: [`  
+`      { productID: '00-443175', productName: 'Bio Orangensaft Sonne', productQuantity: 2500 },`    
+`      { productID: '00-871895', productName: 'Bio Apfelsaft Gold', productQuantity: 3420 },`    
+`      { productID: '01-926885', productName: 'Ariel Waschmittel Color', productQuantity: 478 },`     
+`   ]`   
+`}`
+
 * Filtern nach dem Lagerstandort 1    
-`db.productData.find( { 
-	"warehouseID": "1"
-} )`
+  `db.productData.find( {
+  "warehouseID": "1"
+  } )`
 
 
 * Filtern nach Lagerstandort 1 und dem Produkt mit dem Namen "Bio Apfelsaft Gold"  
-`db.productData.find( { 
-	"warehouseID": "1",
-        "productName": "Bio Apfelsaft Gold"
-} )`
+  `db.productData.find( {
+  "warehouseID": "1",
+  "productName": "Bio Apfelsaft Gold"
+  } )`
 
 * Filtern nach allen Produkten, die einen Lagerbestand unter 500 Stueck haben.  
-`db.productData.find( { 
-	"productQuantity": { $lte: 500 }
-} )`
+  `db.productData.find( {
+  "productQuantity": { $lte: 500 }
+  } )`
 
 * Filtern nach Lagerstandort 1 und einem Lagerbestand unter 500 Stueck haben.  
-`db.productData.find( { 
-    "warehouseID": "1",
-    "productQuantity": { $lte: 500 }
-} )`
+  `db.productData.find( {
+  "warehouseID": "1",
+  "productQuantity": { $lte: 500 }
+  } )`
 
 * Filtern nach allen Produkten der Produktkategorien.  
-`db.productData.find( { 
-     productCategory: { $in: [ "Waschmittel", "Getraenk" ] } 
-} )`
+  `db.productData.find( {
+  productCategory: { $in: [ "Waschmittel", "Getraenk" ] }
+  } )`
 
