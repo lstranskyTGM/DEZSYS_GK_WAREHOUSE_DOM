@@ -7,7 +7,7 @@ import org.springframework.data.annotation.Id;
 
 public class ProductData {
 
-    @Id
+	@Id
 	private String ID;
 
 	private String warehouseID;
@@ -85,7 +85,7 @@ public class ProductData {
 	@Override
 	public String toString() {
 		String info = String.format("Product Info: WarehouseID = %s, ProductID = %s, ProductName = %s, ProductCategory = %s, ProductQuantity = %4.1f",
-			warehouseID, productID, productName, productCategory, productQuantity );
+				warehouseID, productID, productName, productCategory, productQuantity );
 		return info;
 	}
 }
