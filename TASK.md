@@ -77,16 +77,98 @@ Die Daten werden in der Zentrale in einem MongoDB Repository gespeichert und kö
 
 ## 1.6 Fragestellung für Protokoll
 
+### 1.6.1 GKü
+
 + Nennen Sie 4 Vorteile eines NoSQL Repository im Gegensatz zu einem relationalen DBMS
+
+- Skalierbarkeit: Horizontal skalierbar, ideal für Big Data.
+- Flexibles Schema: Ermöglicht unstrukturierte Daten, schnelle Iterationen.
+- Leistung: Optimiert für schnelle Lese- und Schreibvorgänge.
+- Verfügbarkeit: Entworfen für hohe Verfügbarkeit über verteilte Systeme.
+
 + Nennen Sie 4 Nachteile eines NoSQL Repository im Gegensatz zu einem relationalen DBMS
+
+- Standardisierung: Fehlt, was Lernkurve erhöht.
+- Transaktionen: Eingeschränkte ACID-Transaktionsunterstützung.
+- Konsistenz: Eventual Consistency kann zu Inkonsistenzen führen.
+- Analysefähigkeit: Weniger robuste Abfrage- und Berichtsfunktionen.
+
 + Welche Schwierigkeiten ergeben sich bei der Zusammenführung der Daten?
+
+Unterschiede in Datenmodellen, Konsistenz und Skalierungsstrategien erschweren die Integration.
+
 + Welche Arten von NoSQL Datenbanken gibt es?
 + Nennen Sie einen Vertreter für jede Art?
+
+- Dokument: MongoDB
+- Schlüssel-Wert: Redis
+- Spaltenorientiert: Cassandra
+- Graph: Neo4j
+
 + Beschreiben Sie die Abkürzungen CA, CP und AP in Bezug auf das CAP Theorem
+
+- CA: Konsistenz und Verfügbarkeit, schwierig bei Netzwerkpartition.
+- CP: Konsistenz und Partitionstoleranz, kann Verfügbarkeit beeinträchtigen.
+- AP: Verfügbarkeit und Partitionstoleranz, kann Konsistenz beeinträchtigen.
+
 + Mit welchem Befehl koennen Sie den Lagerstand eines Produktes aller Lagerstandorte anzeigen.
+
+Aller Lagerstandorte: 
+```sql
+SELECT SUM(lagerstand) FROM lager WHERE produktID = 'X';
+```
+
 + Mit welchem Befehl koennen Sie den Lagerstand eines Produktes eines bestimmten Lagerstandortes anzeigen.
 
-## 1.7 Links und Dokumente
+Eines bestimmten Lagerstandortes:
+```sql
+SELECT lagerstand FROM lager WHERE produktID = 'X' AND lagerortID = 'Y';
+```
+
+### 1.6.2 GKv
+
++ Formulierung 3 sinnvollen Fragestellung für einen Anwendungsfall in der Zentrale und deren Abfragen in einer Mongo Shell
+
+1. Produkte mit geringem Bestand
+
+Anwendungsfall: Identifizierung fast ausverkaufter Produkte.
+
+MongoDB-Abfrage:
+```sql
+db.warehouseData.find({"competitionData.productQuantity": {$lt: 100}})
+```
+
+2. Lagerbestand eines spezifischen Produkts
+
+Anwendungsfall: Finden aller Lager mit Vorräten von "Ariel Waschmittel Color".
+
+MongoDB-Abfrage:
+```sql
+db.warehouseData.find({"competitionData.productName": "Ariel Waschmittel Color"})
+```
+
+3. Gesamtbestand eines Produkts
+
+Anwendungsfall: Ermittlung der Gesamtzahl eines Produkts über alle Lager.
+
+MongoDB-Abfrage:
+```sql
+db.warehouseData.aggregate([
+{$unwind: "$competitionData"},
+{$match: {"competitionData.productName": "Bio Orangensaft Sonne"}},
+{$group: {_id: null, total: {$sum: "$competitionData.productQuantity"}}}
+])
+```
+
+## 1.7 Ablauf
+
+1. Erstellen eines neuen Models (WarehouseData)
+2. Anpassung des Java Codes (Application)
+3. Zum Testen erstellung & speichern von WarehouseData Objekten
+4. Finden von WarehouseData Objekten
+5. Erstellung von Kronjobs für die automatische Speicherung von WarehouseData Objekten
+
+## 1.8 Links und Dokumente
 * [Accessing Data with MongoDB](https://spring.io/guides/gs/accessing-data-mongodb/)
 * [MongoDB Installation](https://docs.mongodb.com/manual/administration/install-community/)
 * [mongo Shell Quick Reference](https://docs.mongodb.com/manual/reference/mongo-shell/)
@@ -102,7 +184,7 @@ Die Daten werden in der Zentrale in einem MongoDB Repository gespeichert und kö
   - [Introduction to NoSQL Databases on YouTube ](https://www.youtube.com/watch?v=2yQ9TGFpDuM)  
 
 
-## 1.8 Mongo Shell Abfragen  
+## 1.9 Mongo Shell Abfragen  
   
 Link to [Mongo Shell Query and Projection Operators](https://docs.mongodb.com/manual/reference/operator/query/)
 
