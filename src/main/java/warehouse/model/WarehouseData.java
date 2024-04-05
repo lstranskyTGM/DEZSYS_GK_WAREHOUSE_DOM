@@ -1,18 +1,19 @@
 package warehouse.model;
 
-//import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.List;
 
-//import java.io.Serializable;
-//import java.text.SimpleDateFormat;
-//import java.util.Date;
-//import org.springframework.data.annotation.Id;
+import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import org.springframework.data.annotation.Id;
+import java.time.LocalDateTime;
 
 public class WarehouseData {
 
     private String warehouseID;
     private String warehouseName;
-    private String timestamp;
+    private LocalDateTime timestamp;
     private String warehousePostalCode;
     private String warehouseCity;
     private String warehouseCountry;
@@ -24,11 +25,12 @@ public class WarehouseData {
     public WarehouseData() {
     }
 
-    public WarehouseData(String warehouseID, String warehouseName, String timestamp, String warehousePostalCode, String warehouseCity, String warehouseCountry, List<ProductData> productData) {
+    public WarehouseData(String warehouseID, String warehouseName, LocalDateTime timestamp, String warehousePostalCode, String warehouseCity, String warehouseCountry, List<ProductData> productData) {
         super();
         this.warehouseID = warehouseID;
         this.warehouseName = warehouseName;
-        this.timestamp = timestamp;
+        if(timestamp == null) this.timestamp = LocalDateTime.now();
+        else{this.timestamp=timestamp;}
         this.warehousePostalCode = warehousePostalCode;
         this.warehouseCity = warehouseCity;
         this.warehouseCountry = warehouseCountry;

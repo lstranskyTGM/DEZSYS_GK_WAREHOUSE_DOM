@@ -10,6 +10,8 @@ Die detaillierte [Aufgabenstellung](TASK.md) beschreibt die notwendigen Schritte
 3. Zum Testen erstellung & speichern von WarehouseData Objekten
 4. Finden von WarehouseData Objekten
 5. Erstellung von Kronjobs für die automatische Speicherung von WarehouseData Objekten
+6. Hinzufügen von Timestamps zu WarehouseData und ProductData mit LocalDateTime
+7. Queries bearbeiten, damit sie auch den Timestamp und die mehreren Warehouses mit derselben ID berücksichtigen
 
 ## Fragen
 
@@ -71,7 +73,7 @@ Anwendungsfall: Identifizierung fast ausverkaufter Produkte.
 
 MongoDB-Abfrage:
 ```sql
-db.warehouseData.find({"competitionData.productQuantity": {$lt: 100}})
+db.warehouseData.find({"productData.productQuantity": {$lt: 100}})
 ```
 
 2. Lagerbestand eines spezifischen Produkts
@@ -80,7 +82,7 @@ Anwendungsfall: Finden aller Lager mit Vorräten von "Ariel Waschmittel Color".
 
 MongoDB-Abfrage:
 ```sql
-db.warehouseData.find({"competitionData.productName": "Ariel Waschmittel Color"})
+db.warehouseData.find({"productData.productName": "Ariel Waschmittel Color"})
 ```
 
 3. Gesamtbestand eines Produkts
@@ -90,9 +92,9 @@ Anwendungsfall: Ermittlung der Gesamtzahl eines Produkts über alle Lager.
 MongoDB-Abfrage:
 ```sql
 db.warehouseData.aggregate([
-{$unwind: "$competitionData"},
-{$match: {"competitionData.productName": "Bio Orangensaft Sonne"}},
-{$group: {_id: null, total: {$sum: "$competitionData.productQuantity"}}}
+{$unwind: "$productData"},
+{$match: {"productData.productName": "Bio Orangensaft Sonne"}},
+{$group: {_id: null, total: {$sum: "$productData.productQuantity"}}}
 ])
 ```
 

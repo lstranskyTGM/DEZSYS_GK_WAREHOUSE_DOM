@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.springframework.data.annotation.Id;
+import java.time.LocalDateTime;
+
 
 public class ProductData {
 
@@ -15,6 +17,7 @@ public class ProductData {
 	private String productName;
 	private String productCategory;
 	private double productQuantity;
+	private LocalDateTime timestamp;
 
 	/**
 	 * Constructor
@@ -22,13 +25,15 @@ public class ProductData {
 	public ProductData() {
 	}
 
-	public ProductData(String warehouseID, String productID, String productName, String productCategory, double productQuantity ) {
+	public ProductData(String warehouseID, String productID, String productName, String productCategory, double productQuantity, LocalDateTime timestamp) {
 		super();
 		this.warehouseID = warehouseID;
 		this.productID = productID;
 		this.productName = productName;
 		this.productCategory = productCategory;
 		this.productQuantity = productQuantity;
+		if(timestamp == null) this.timestamp = LocalDateTime.now();
+		else{this.timestamp=timestamp;}
 	}
 
 	public String getID() {
@@ -84,8 +89,8 @@ public class ProductData {
 	 */
 	@Override
 	public String toString() {
-		String info = String.format("Product Info: WarehouseID = %s, ProductID = %s, ProductName = %s, ProductCategory = %s, ProductQuantity = %4.1f",
-				warehouseID, productID, productName, productCategory, productQuantity );
+		String info = String.format("Product Info: WarehouseID = %s, ProductID = %s, ProductName = %s, ProductCategory = %s, ProductQuantity = %4.1f, Timestamp = %s",
+				warehouseID, productID, productName, productCategory, productQuantity, timestamp );
 		return info;
 	}
 }
