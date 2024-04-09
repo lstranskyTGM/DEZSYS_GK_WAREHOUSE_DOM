@@ -107,13 +107,17 @@ db.warehouseData.aggregate([
 
 ### EKü
 
-Erstellen eines Cronjob auf Windwos:
+#### Erstellen eines Cronjobs auf Windwos
 
+1. Erstellen einer Batch-Datei
+   
 warehouse.bat:
 ```bat
 cd Path\To\Application
 gradle bootRun
 ```
+
+2. Task erstellen
 
 Aufgabe im Task Scheduler erstellen
 
@@ -123,6 +127,10 @@ Tool schtasks in Powerschell
 ```bat
 schtasks /create /tn "Task" /tr "C:\Path\To\Application" /sc daily /st 14:00
 ```
+- /tn: Der Name des Tasks
+- /tr: Der Task zum Ausführen
+- /sc: Abstände für die Ausführung
+- /st: Uhrzeit für die Ausführung
 
 ## Quellen
 
