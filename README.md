@@ -53,14 +53,21 @@ Unterschiede in Datenmodellen, Konsistenz und Skalierungsstrategien erschweren d
 
 Aller Lagerstandorte:
 ```sql
-SELECT SUM(lagerstand) FROM lager WHERE produktID = 'X';
+db.warehouses.aggregate([
+  {$unwind: "$products"}, 
+  {$match: {"products.productId": "X"}}, 
+  {$group: {_id: null, totalQuantity: {$sum: "$products.quantity"}}} 
+])
 ```
 
 + Mit welchem Befehl koennen Sie den Lagerstand eines Produktes eines bestimmten Lagerstandortes anzeigen.
 
 Eines bestimmten Lagerstandortes:
 ```sql
-SELECT lagerstand FROM lager WHERE produktID = 'X' AND lagerortID = 'Y';
+db.warehouses.find(
+  {"warehouseId": "Y", "products.productId": "X"},
+  {"products.$": 1} 
+)
 ```
 
 ### GKv
@@ -92,9 +99,9 @@ Anwendungsfall: Ermittlung der Gesamtzahl eines Produkts über alle Lager.
 MongoDB-Abfrage:
 ```sql
 db.warehouseData.aggregate([
-{$unwind: "$productData"},
-{$match: {"productData.productName": "Bio Orangensaft Sonne"}},
-{$group: {_id: null, total: {$sum: "$productData.productQuantity"}}}
+  {$unwind: "$productData"},
+  {$match: {"productData.productName": "Bio Orangensaft Sonne"}},
+  {$group: {_id: null, total: {$sum: "$productData.productQuantity"}}}
 ])
 ```
 
