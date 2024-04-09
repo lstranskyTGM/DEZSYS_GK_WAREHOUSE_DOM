@@ -105,6 +105,25 @@ db.warehouseData.aggregate([
 ])
 ```
 
+### EKü
+
+Erstellen eines Cronjob auf Windwos:
+
+warehouse.bat:
+```bat
+cd Path\To\Application
+gradle bootRun
+```
+
+Aufgabe im Task Scheduler erstellen
+
+oder
+
+Tool schtasks in Powerschell
+```bat
+schtasks /create /tn "Task" /tr "C:\Path\To\Application" /sc daily /st 14:00
+```
+
 ## Quellen
 
 * [Accessing Data with MongoDB](https://spring.io/guides/gs/accessing-data-mongodb/)
